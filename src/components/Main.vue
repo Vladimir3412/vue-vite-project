@@ -40,11 +40,15 @@
       <div class="w-[1030px]">
         <!-- Силовой спорт -->
         <template v-if="filteredPowerSportCards.length">
+          <transition name="fade" >
           <h1 class="font-semibold text-[24px] font-montserrat">Силовой спорт</h1>
+          </transition>
+          <transition-group name="card-list" tag="card-list" >
           <div
             class="relative flex w-[1030px] h-[240px] bg-white p-[20px] rounded-[5px] mt-[20px]"
-            v-for="card in filteredPowerSportCards"
+            v-for="(card, index) in filteredPowerSportCards"
             :key="card.id"
+            :style="{ '--i': index }"
           >
             <div class="absolute top-0 left-0 w-full h-[4px] bg-[#70232F] rounded-t-[35px]"></div>
             <div class="absolute top-[20px] right-[20px] flex gap-[10px]">
@@ -95,15 +99,20 @@
               Подробнее
             </button>
           </div>
+          </transition-group>
         </template>
 
         <!-- Единоборства 1 -->
         <template v-if="filteredMartialArtsCardsSection1.length">
+          <transition name="fade" >
           <h1 class="font-semibold text-[24px] font-montserrat mt-[20px]">Единоборства</h1>
+          </transition>
+          <transition-group name="card-list" tag="card-list">
           <div
             class="relative flex w-[1030px] h-[240px] bg-white p-[20px] rounded-[5px] mt-[20px]"
-            v-for="card in filteredMartialArtsCardsSection1"
+            v-for="(card, index) in filteredMartialArtsCardsSection1"
             :key="card.id"
+            :style="{ '--i': index }"
           >
             <div class="absolute top-0 left-0 w-full h-[4px] bg-[#70232F] rounded-t-[35px]"></div>
             <div class="absolute top-[20px] right-[20px] flex gap-[10px]">
@@ -154,15 +163,20 @@
               Подробнее
             </button>
           </div>
+          </transition-group>
         </template>
 
         <!-- Единоборства 2 -->
         <template v-if="filteredMartialArtsCardsSection2.length">
+          <transition name="fade" >
           <h1 class="font-semibold text-[24px] font-montserrat mt-[20px]">Единоборства</h1>
+          </transition>
+          <transition-group name="card-list" tag="div">
           <div
             class="relative flex w-[1030px] h-[240px] bg-white p-[20px] rounded-[5px] mt-[20px]"
-            v-for="card in filteredMartialArtsCardsSection2"
+            v-for="(card, index) in filteredMartialArtsCardsSection2"
             :key="card.id"
+            :style="{ '--i': index }"
           >
             <div class="absolute top-0 left-0 w-full h-[4px] bg-[#70232F] rounded-t-[35px]"></div>
             <div class="absolute top-[20px] right-[20px] flex gap-[10px]">
@@ -213,15 +227,20 @@
               Подробнее
             </button>
           </div>
+          </transition-group>
         </template>
 
         <!-- Единоборства 3 -->
         <template v-if="filteredMartialArtsCardsSection3.length">
+          <transition name="fade" >
           <h1 class="font-semibold text-[24px] font-montserrat mt-[20px]">Единоборства</h1>
+          </transition>
+          <transition-group name="card-list" tag="div">
           <div
             class="relative flex w-[1030px] h-[240px] bg-white p-[20px] rounded-[5px] mt-[20px]"
-            v-for="card in filteredMartialArtsCardsSection3"
+            v-for="(card, index) in filteredMartialArtsCardsSection3"
             :key="card.id"
+            :style="{ '--i': index }"
           >
             <div class="absolute top-0 left-0 w-full h-[4px] bg-[#70232F] rounded-t-[35px]"></div>
             <div class="absolute top-[20px] right-[20px] flex gap-[10px]">
@@ -272,6 +291,7 @@
               Подробнее
             </button>
           </div>
+          </transition-group>
         </template>
       </div>
 
@@ -496,3 +516,36 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+/* Анимация для появления карточек */
+.card-list-enter-active,
+.card-list-leave-active {
+  transition: all 0.4s ease;
+  transition-delay: calc(0.3s * var(--i));
+}
+.card-list-enter-from {
+  opacity: 0;
+  transform: translateY(-20px) scale(0.95);
+  filter: blur(5px);
+  box-shadow: none;
+}
+.card-list-leave-to {
+  opacity: 0;
+  transform: translateY(20px) scale(0.95);
+  filter: blur(5px);
+  box-shadow: none;
+}
+
+
+/* Анимация для заголовков */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+</style>
