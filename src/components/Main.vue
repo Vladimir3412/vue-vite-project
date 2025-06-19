@@ -1,4 +1,4 @@
-```vue
+
 <template>
   <div class="w-[1480px] min-h-[2916px] bg-[#EFEFEF] mx-auto mt-6 rounded-[15px] p-[40px] mt-[30px] mb-[30px]">
     <!-- Панель поиска и фильтров -->
@@ -36,8 +36,14 @@
 
     <!-- Главный контейнер -->
     <div class="flex gap-[40px] w-[1400px] mx-auto mt-[20px]">
-      <!-- Левая часть — карточки -->
-      <div class="w-[1030px]">
+      
+
+      <div  class="w-[1030px]">
+        <transition name="fade">
+             <div v-if="filteredCards.length === 0" class="text-center text-[24px] text-[#70232F] font-montserrat no-results" >
+    По вашему запросу ничего не найдено
+  </div>
+  </transition>
         <!-- Силовой спорт -->
         <template v-if="filteredPowerSportCards.length">
           <transition name="fade" >
@@ -296,22 +302,55 @@
       </div>
 
       <!-- Правая часть — фильтры -->
-      <div class="w-[330px]">
-        <h1 class="font-semibold text-[24px] font-montserrat">Фильтры</h1>
-        <!-- Дополнительные фильтры можно добавить здесь -->
+      <div class="w-[330px]"  >
+        <h1 class="font-semibold text-[24px] font-montserrat mb-[17px]">Фильтры</h1>
+          
+        <div class="h-[1105px] bg-white rounded-[5px] rounded-t-[15px] px-[20px] py-[10px] gap-[15px] flex flex-col">
+          <h1 class="font-semibold text-[14px]">Возраст</h1>
+
+          <div class="relative">
+            <div @click="toggleAgeDropdown" class="age-dropdown-button">
+              {{ selectedAge === 0 ? 'Любой' : `${selectedAge} ${getYearWord(selectedAge)}` }} 
+              <span>
+               <img :src="chevstrelka" alt="geo" width="15" height="15">
+              </span>     
+            </div>
+
+            <transition name="dropdown">
+                    <div v-if="isAgeDropdownOpen" class="age-dropdown-list">
+                      <div v-for="age in ages"
+                      :key="age"
+                      @click="selectAge(age)"
+                      class="age-dropdown-item"
+                      :class="{ 'bg-[#D86B79] text-white': age === selectedAge }"
+                      >
+                      {{ age === 0 ? 'Любой' : `${age} ${getYearWord(age)}` }}
+                      </div>
+                    </div>
+            </transition>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
+
+<script setup>
+import chevstrelka from '../assets/strelka.png'
+</script>
 <script>
 import image1 from '../assets/imagecart.png';
 
 export default {
   data() {
     return {
+      
       search: '',
       filterType: 'all',
+      isAgeDropdownOpen: false, // Открыт ли dropdown
+      selectedAge: 0, // Выбранный возраст (0 = Любой)
+      ages: Array.from({ length: 19 }, (_, i) => i), // [0, 1, 2, ..., 18]
       cards: [
         // Силовой спорт
         {
@@ -322,7 +361,7 @@ export default {
           age: '10-18 лет',
           tag: 'Тяжелая атлетика',
           type: 'Бесплатно',
-          firstFree: true,
+          firstFree: false,
           image: image1,
           geo: 'г. Иркутск, Юбилейный мкр., стр. 49/1',
           location: 'ФОК "Юбилейный"',
@@ -433,7 +472,7 @@ export default {
           age: '6-18 лет',
           tag: 'Вольная борьба',
           type: '3200 руб. месяц',
-          firstFree: true,
+          firstFree: false,
           image: image1,
           geo: 'г. Иркутск, Юбилейный мкр., стр. 49/1',
           location: 'ФОК "Юбилейный"',
@@ -476,6 +515,12 @@ export default {
       ],
     };
   },
+      mounted() {
+      document.addEventListener('click', this.closeDropdown);
+    },
+    beforeDestroy() {
+      document.removeEventListener('click', this.closeDropdown);
+    },
   computed: {
     // Базовая фильтрация по поиску и типу (платные/бесплатные)
     filteredCards() {
@@ -495,11 +540,22 @@ export default {
       } else if (this.filterType === 'free') {
         return filtered.filter(card => card.type === 'Бесплатно');
       }
+      // Добавляем фильтр по возрасту
+      if( this.selectedAge !== 0) {
+        filtered = filtered.filter(card => {
+          const cleanAge = card.age.replace(' лет', ''); // Убираем " лет" нахзуй чтоб не мешался
+          const [minAge, maxAge] = cleanAge.split('-').map(Number); // вместо стринг на намбер
+          return this.selectedAge >= minAge && this.selectedAge <= maxAge;
+        })
+      }
+      // Возвращаем все карточки, если фильтр не выбран
       return filtered;
     },
+   
     // Карточки для "Силового спорта"
     filteredPowerSportCards() {
       return this.filteredCards.filter(c => c.category === 'Силовой спорт');
+      
     },
     // Карточки для "Единоборств", секция 1
     filteredMartialArtsCardsSection1() {
@@ -514,6 +570,37 @@ export default {
       return this.filteredCards.filter(c => c.category === 'Единоборства' && c.section === 3);
     },
   },
+
+  methods: {
+    
+    toggleAgeDropdown() {
+      this.isAgeDropdownOpen = !this.isAgeDropdownOpen;
+    },
+    selectAge(age) {
+      this.selectedAge = age; // Сохраняем возраст
+      this.isAgeDropdownOpen = false; // Закрываем dropdown после выбора
+    },
+
+    closeDropdown(event) {
+      if(!event.target.closest('.age-dropdown-button') && !event.target.closest('.age-dropdown-list')) {
+        this.isAgeDropdownOpen = false;
+      }
+    },
+    // mounted() {
+    //   document.addEventListener('click', this.closeDropdown);
+    // },
+    // beforeDestroy() {
+    //   document.removeEventListener('click', this.closeDropdown);
+    // },
+
+    getYearWord(age) {
+      if (age % 10 === 1 && age !== 11) return 'год';
+      if([2, 3, 4].includes(age % 10) && ![12, 13, 14].includes(age)) return 'года';
+      return 'лет';
+    }
+
+  }
+
 };
 </script>
 
@@ -548,4 +635,50 @@ export default {
   opacity: 0;
 }
 
+
+.age-dropdown-button {
+  background: white;
+  border: 1px solid #D86B79;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  text-align: left;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.age-dropdown-list {
+  position: absolute;
+  top: 40px;
+  left: 0;
+  width: 100%;
+  background: white;
+  border: 1px solid #D86B79;
+  border-radius: 5px;
+  max-height: 250px;
+  overflow-y: auto;
+  z-index: 10;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+.age-dropdown-item {
+  padding: 5px 10px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+/* допилить, чтоб не накладывалось друг на друга */
+.age-dropdown-item:hover {
+  background: #C8C5CF;
+}
+
+.dropdown-enter-active, .dropdown-leave-active {
+  transition: all 0.2s ease;
+}
+.dropdown-enter-from, .dropdown-leave-to {
+  opacity: 0;
+  transform: scale(0.95);
+}
 </style>
