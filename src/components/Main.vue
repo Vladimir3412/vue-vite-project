@@ -329,7 +329,26 @@
                     </div>
             </transition>
           </div>
+          <h1 class="font-semibold text-[14px]">Пол</h1>
+<div class="checkbox-group">
+        <label class="checkbox-label">
+          <input type="checkbox" v-model="selectedGenders" value="male" class="hidden-checkbox">
+          <span class="custom-checkbox" :class="{ 'checked': selectedGenders.includes('male') }">
+            <span v-if="selectedGenders.includes('male')" class="checkmark">✔</span>
+          </span>
+          Мужской
+        </label>
+        <label class="checkbox-label">
+          <input type="checkbox" v-model="selectedGenders" value="female" class="hidden-checkbox">
+          <span class="custom-checkbox" :class="{ 'checked': selectedGenders.includes('female') }">
+            <span v-if="selectedGenders.includes('female')" class="checkmark">✔</span>
+          </span>
+          Женский
+        </label>
+      </div>
         </div>
+
+        
       </div>
     </div>
   </div>
@@ -345,7 +364,7 @@ import image1 from '../assets/imagecart.png';
 export default {
   data() {
     return {
-      
+      selectedGenders: [], // ['male', 'female']
       search: '',
       filterType: 'all',
       isAgeDropdownOpen: false, // Открыт ли dropdown
@@ -681,4 +700,46 @@ export default {
   opacity: 0;
   transform: scale(0.95);
 }
+
+.checkbox-group {
+  display: flex;
+  gap: 20px;
+  margin-top: -10px;
+}
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+}
+.hidden-checkbox {
+  display: none;
+}
+.custom-checkbox {
+  width: 16px;
+  height: 16px;
+  border: 2px solid #D86B79;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.checked {
+  background: #70232F;
+  border-color: #70232F;
+}
+.checkmark {
+  color: white;
+  font-size: 12px;
+}
+.selected-genders {
+  margin-top: 10px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  color: #70232F;
+}
+
+
 </style>
