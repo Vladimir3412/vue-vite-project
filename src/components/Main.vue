@@ -533,8 +533,8 @@ export default {
     return {
       // загружаем выбранные подкатегории из localStorage или юзаем пустой массив
       selectedSubcategories: JSON.parse(localStorage.getItem('selectedSubcategories')) || [],
-      isCategoryOpen: false,
-      isPowerSportOpen: false,
+      isCategoryOpen: JSON.parse(localStorage.getItem('isCategoryOpen')) || false,
+      isPowerSportOpen: JSON.parse(localStorage.getItem('isPowerSportOpen')) || false,
 
       selectedGenders: JSON.parse(localStorage.getItem('selectedGenders')) || [], // ['male', 'female']
       
@@ -824,9 +824,13 @@ export default {
 // из закрытого ( первоначальное состояние) делаем открытым 
     toggleCategory() {
       this.isCategoryOpen = !this.isCategoryOpen;
+      // Сохраняем состояние в localStorage для сохранения при перезагрузке
+      localStorage.setItem('isCategoryOpen', JSON.stringify(this.isCategoryOpen))
     },
     toggleCategory1() {
       this.isPowerSportOpen = !this.isPowerSportOpen;
+      localStorage.setItem('isPowerSportOpen', JSON.stringify(this.isPowerSportOpen))
+
     },
     // считаем длину 
       getCount(tag) {
@@ -863,11 +867,31 @@ getCategoryCount(category) {
         // Если тег не выбран, добавляем его
       } else {
         this.selectedSubcategories.push(tag);
+        if(this.subcategories.map(s => s.tag).includes(tag)) {
+          this.isCategoryOpen = true;
+          localStorage.setItem('isCategoryOpen', JSON.stringify(true))
+        }
+        if(this.martialArtsSubcategories.map(s => s.tag).includes(tag)) {
+          this.isPowerSportOpen = true;
+          localStorage.setItem('isPowerSportOpen', JSON.stringify(true))
+        }
+
       }
       // Сохраняем обновлённый массив в localStorage для сохранения при перезагрузке
       localStorage.setItem('selectedSubcategories', JSON.stringify(this.selectedSubcategories));
     }
 
+  },
+  created() {
+    // Открываем открвающийся список(аккордеон) Силовой спорт, если есть выбранные подкатегории
+    if(this.selectedSubcategories.some(tag => this.subcategories.map(s => s.tag).includes(tag))) {
+      this.isCategoryOpen = true;
+      localStorage.setItem('isCategoryOpen', JSON.stringify(true));
+    }
+    if(this.selectedSubcategories.some(tag => this.martialArtsSubcategories.map(s => s.tag).includes(tag))) {
+      this.isPowerSportOpen = true;
+      localStorage.setItem('isPowerSportOpen', JSON.stringify(true));
+    }
   }
 
 };
