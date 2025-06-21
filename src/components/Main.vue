@@ -356,6 +356,7 @@
         <!-- слушаем клик toggleCategory - переключение из закрытой категории при клике, в открытую -->
       <h2 class="font-montserrat flex items-center justify-between cursor-pointer" @click="toggleCategory">
         <div class="category-title">
+          <!-- подставляем getCategoryCount для общего кол-ва в категории -->
         Силовой спорт <span class="count">{{ getCategoryCount('Силовой спорт') }}</span>
         </div>
         <!-- Добавляем класс rotated, в случае если категория открыта(true)  -->
@@ -365,12 +366,13 @@
         <!--  Показываем isCategoryOpen, если true (выше при клике на стрелочку из false уже поменяли на true) -->
       <div v-show="isCategoryOpen" class="category-list">
         <!-- перебираем массив, добавляем ключ по тегу  -->
-        <div v-for="subcategory in subcategories" :key="subcategory.tag" class="subcategory-item">
+        <div v-for="subcategory in subcategories" :key="subcategory.tag" class="subcategory-item"
+        @click="toggleSubcategory(subcategory.tag)" :class="{'selected' : selectedSubcategories.includes(subcategory.tag) }"
+        >
           <!-- подставляем из массива наш тег и указываем рядом с ним кол-во через getCount  -->
             <li>{{ subcategory.tag }} 
               <span class="count"> {{ getCount(subcategory.tag)  }}</span>
              </li>
-          
             
         </div>
       </div>
@@ -388,8 +390,12 @@
     </h2>
     <transition name="accordion">
     <div v-show="isPowerSportOpen" class="category-list">
-    <div v-for="subcatecor in martialArtsSubcategories " :key="subcatecor.tag" class="subcategory-item">
-      <li> {{ subcatecor.tag }} 
+    <div v-for="subcatecor in martialArtsSubcategories " :key="subcatecor.tag" class="subcategory-item"
+    
+    @click="toggleSubcategory(subcatecor.tag)" :class="{'selected' : selectedSubcategories.includes(subcatecor.tag)}"
+    >
+    <!-- Клик добавляет/убирает подкатегорию из selectedSubcategories, подсвечивает выбранную ВЫШЕ -->
+      <li class="cursor-pointer"> {{ subcatecor.tag }} 
         <span class="count">
           {{ getCount(subcatecor.tag) }}
         </span>
@@ -522,6 +528,7 @@ export default {
       isPowerSportOpen: false,
 
       selectedGenders: [], // ['male', 'female']
+      selectedSubcategories: [], // Хранит выбранные подкатегории (например, ['Тяжелая атлетика'])
       search: '',
       filterType: 'all',
       isAgeDropdownOpen: false, // Открыт ли dropdown
@@ -531,6 +538,7 @@ export default {
         {tag: 'Тяжелая атлетика'},
         {tag: 'Пауэрлифтинг'},
       ],
+      
       martialArtsSubcategories: [
       { tag: 'Дзюдо' },
       { tag: 'Вольная борьба' },
@@ -752,6 +760,15 @@ export default {
           this.selectedGenders.includes(card.gender) || card.gender === 'both'
         );
       }
+
+// Фильтруем карточки по подкатегориям, если selectedSubcategories не пустой
+// Сначала смотрим, выбраны ли подкатегории, если да, то
+// осталяем только те карточки, где card.tag есть в selectedSubcategories
+      if(this.selectedSubcategories.length > 0) {
+        filtered = filtered.filter(card => this.selectedSubcategories.includes(card.tag))
+      }
+
+      
       // Возвращаем все карточки, если фильтр не выбран
       return filtered;
     },
@@ -821,6 +838,15 @@ getCategoryCount(category) {
       if (age % 10 === 1 && age !== 11) return 'год';
       if([2, 3, 4].includes(age % 10) && ![12, 13, 14].includes(age)) return 'года';
       return 'лет';
+    },
+    toggleSubcategory(tag) {
+      // Если тег уже выбран, убираем его
+      if(this.selectedSubcategories.includes(tag)) {
+        this.selectedSubcategories = this.selectedSubcategories.filter(t => t !== tag)
+        // Если тег не выбран, добавляем его
+      } else {
+        this.selectedSubcategories.push(tag);
+      }
     }
 
   }
@@ -981,5 +1007,10 @@ getCategoryCount(category) {
   display: flex;
   align-items: center;
   gap: 10px; /* Отступ между текстом и цифрой */
+}
+
+.subcategory-item.selected {
+  color: #70232F; /* Подсвечиваем выбранную подкатегорию */
+  font-weight: 600; /* Делаем чуть жирнее для акцента */
 }
 </style>
