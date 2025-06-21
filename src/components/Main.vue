@@ -305,14 +305,14 @@
       <div class="w-[330px]"  >
         <h1 class="font-semibold text-[24px] font-montserrat mb-[17px]">Фильтры</h1>
           
-        <div class="h-[1105px] bg-white rounded-[5px] rounded-t-[15px] px-[20px] py-[10px] gap-[15px] flex flex-col">
+        <div class="h-[1215px] bg-white rounded-[5px] rounded-t-[15px] px-[20px] py-[10px] gap-[15px] flex flex-col">
           <h1 class="font-semibold text-[14px]">Возраст</h1>
 
           <div class="relative">
             <div @click="toggleAgeDropdown" class="age-dropdown-button">
               {{ selectedAge === 0 ? 'Любой' : `${selectedAge} ${getYearWord(selectedAge)}` }} 
               <span>
-               <img :src="chevstrelka" alt="geo" width="15" height="15">
+               <img :src="chevstrelka" alt="arrow" class="arrow" width="15" height="15" >
               </span>     
             </div>
 
@@ -330,10 +330,13 @@
             </transition>
           </div>
           <h1 class="font-semibold text-[14px]">Пол</h1>
-<div class="checkbox-group">
-        <label class="checkbox-label">
-          <input type="checkbox" v-model="selectedGenders" value="male" class="hidden-checkbox">
+      <div class="checkbox-group">
+        <label class="checkbox-label ">
+          <!-- v-model привязывает чекбокс к массиву selectedGenders и значение value="male" закинется в массив selectedGenders-->
+          <input type="checkbox" v-model="selectedGenders" value="male" class="hidden-checkbox ">
+          <!-- Мы добавим класс при условии, что в массиве есть значеение 'male', если true - добавляем, иначе - false -->
           <span class="custom-checkbox" :class="{ 'checked': selectedGenders.includes('male') }">
+            <!-- если в массиве есть 'male', то показываем галочку -->
             <span v-if="selectedGenders.includes('male')" class="checkmark">✔</span>
           </span>
           Мужской
@@ -346,6 +349,157 @@
           Женский
         </label>
       </div>
+
+      <h1 class="text-[14px] font-semibold font-montserrat" >Каталог</h1>
+
+  <div>
+        <!-- слушаем клик toggleCategory - переключение из закрытой категории при клике, в открытую -->
+      <h2 class="font-montserrat flex items-center justify-between cursor-pointer" @click="toggleCategory">
+        <div class="category-title">
+        Силовой спорт <span class="count">{{ getCategoryCount('Силовой спорт') }}</span>
+        </div>
+        <!-- Добавляем класс rotated, в случае если категория открыта(true)  -->
+        <img :src="chevstrelka" alt="arrow" width="15" height="15" class="arrow" :class="{'rotated' : isCategoryOpen }">
+      </h2>
+      <transition name="accordion">
+        <!--  Показываем isCategoryOpen, если true (выше при клике на стрелочку из false уже поменяли на true) -->
+      <div v-show="isCategoryOpen" class="category-list">
+        <!-- перебираем массив, добавляем ключ по тегу  -->
+        <div v-for="subcategory in subcategories" :key="subcategory.tag" class="subcategory-item">
+          <!-- подставляем из массива наш тег и указываем рядом с ним кол-во через getCount  -->
+            <li>{{ subcategory.tag }} 
+              <span class="count"> {{ getCount(subcategory.tag)  }}</span>
+             </li>
+          
+            
+        </div>
+      </div>
+      </transition>
+
+  </div>
+
+
+  <div>
+    <h2 class="font-montserrat flex items-center justify-between cursor-pointer" @click="toggleCategory1">
+      <div class="category-title">
+               Единоборства <span class="count">{{ getCategoryCount('Единоборства') }}</span>
+       </div>        
+              <img :src="chevstrelka" alt="arrow" width="15" height="15" class="arrow" :class="{'rotated' : isPowerSportOpen }">
+    </h2>
+    <transition name="accordion">
+    <div v-show="isPowerSportOpen" class="category-list">
+    <div v-for="subcatecor in martialArtsSubcategories " :key="subcatecor.tag" class="subcategory-item">
+      <li> {{ subcatecor.tag }} 
+        <span class="count">
+          {{ getCount(subcatecor.tag) }}
+        </span>
+        
+      </li>
+
+    </div>
+    </div>
+    </transition>
+
+
+  </div>
+
+
+      <h2 class="font-montserrat flex items-center justify-between cursor-pointer" >
+               ДПИ и ремесла
+              <img :src="chevstrelka" alt="arrow" width="15" height="15" class="arrow" >
+    </h2>
+          <h2 class="font-montserrat flex items-center justify-between cursor-pointer" >
+               Техническое конструирование
+              <img :src="chevstrelka" alt="arrow" width="15" height="15" class="arrow" >
+    </h2>
+          <h2 class="font-montserrat flex items-center justify-between cursor-pointer" >
+               Словесность
+              <img :src="chevstrelka" alt="arrow" width="15" height="15" class="arrow" >
+    </h2>
+          <h2 class="font-montserrat flex items-center justify-between cursor-pointer" >
+               Иностранные языки
+              <img :src="chevstrelka" alt="arrow" width="15" height="15" class="arrow" >
+    </h2>
+          <h2 class="font-montserrat flex items-center justify-between cursor-pointer" >
+               Развитие интеллекта
+              <img :src="chevstrelka" alt="arrow" width="15" height="15" class="arrow" >
+    </h2>
+          <h2 class="font-montserrat flex items-center justify-between cursor-pointer" >
+               Информационные технологии
+              <img :src="chevstrelka" alt="arrow" width="15" height="15" class="arrow" >
+    </h2>
+          <h2 class="font-montserrat flex items-center justify-between cursor-pointer" >
+               История и Традиции
+              <img :src="chevstrelka" alt="arrow" width="15" height="15" class="arrow" >
+    </h2>
+          <h2 class="font-montserrat flex items-center justify-between cursor-pointer" >
+               Педагогика
+              <img :src="chevstrelka" alt="arrow" width="15" height="15" class="arrow" >
+    </h2>
+          <h2 class="font-montserrat flex items-center justify-between cursor-pointer" >
+               Музыка и звук
+              <img :src="chevstrelka" alt="arrow" width="15" height="15" class="arrow" >
+    </h2>
+          <h2 class="font-montserrat flex items-center justify-between cursor-pointer" >
+               Пение
+              <img :src="chevstrelka" alt="arrow" width="15" height="15" class="arrow" >
+    </h2>
+          <h2 class="font-montserrat flex items-center justify-between cursor-pointer" >
+               ДПИ и ремесла
+              <img :src="chevstrelka" alt="arrow" width="15" height="15" class="arrow" >
+    </h2>
+          <h2 class="font-montserrat flex items-center justify-between cursor-pointer" >
+               Хореография(танцы)
+              <img :src="chevstrelka" alt="arrow" width="15" height="15" class="arrow" >
+    </h2>
+          <h2 class="font-montserrat flex items-center justify-between cursor-pointer" >
+               Мода и стиль
+              <img :src="chevstrelka" alt="arrow" width="15" height="15" class="arrow" >
+    </h2>
+          <h2 class="font-montserrat flex items-center justify-between cursor-pointer" >
+               Познавательные развлечения
+              <img :src="chevstrelka" alt="arrow" width="15" height="15" class="arrow" >
+    </h2>
+          <h2 class="font-montserrat flex items-center justify-between cursor-pointer" >
+              Туризм
+              <img :src="chevstrelka" alt="arrow" width="15" height="15" class="arrow" >
+    </h2>
+          <h2 class="font-montserrat flex items-center justify-between cursor-pointer" >
+               Естественные науки
+              <img :src="chevstrelka" alt="arrow" width="15" height="15" class="arrow" >
+    </h2>
+          <h2 class="font-montserrat flex items-center justify-between cursor-pointer" >
+               Люди и животные
+              <img :src="chevstrelka" alt="arrow" width="15" height="15" class="arrow" >
+    </h2>
+          <h2 class="font-montserrat flex items-center justify-between cursor-pointer" >
+               Эстетические виды спорта
+              <img :src="chevstrelka" alt="arrow" width="15" height="15" class="arrow" >
+    </h2>
+          <h2 class="font-montserrat flex items-center justify-between cursor-pointer" >
+               Технические виды спорта
+              <img :src="chevstrelka" alt="arrow" width="15" height="15" class="arrow" >
+    </h2>
+          <h2 class="font-montserrat flex items-center justify-between cursor-pointer" >
+               Командно-игровой спорт
+              <img :src="chevstrelka" alt="arrow" width="15" height="15" class="arrow" >
+    </h2>
+          <h2 class="font-montserrat flex items-center justify-between cursor-pointer" >
+               Индивидуально игровой спорт
+              <img :src="chevstrelka" alt="arrow" width="15" height="15" class="arrow" >
+    </h2>
+              <h2 class="font-montserrat flex items-center justify-between cursor-pointer" >
+               Водные виды спорта
+              <img :src="chevstrelka" alt="arrow" width="15" height="15" class="arrow" >
+    </h2>
+              <h2 class="font-montserrat flex items-center justify-between cursor-pointer" >
+               Лёгкая атлетика и гимнастика
+              <img :src="chevstrelka" alt="arrow" width="15" height="15" class="arrow" >
+    </h2>
+              <h2 class="font-montserrat flex items-center justify-between cursor-pointer" >
+               Физкультура
+              <img :src="chevstrelka" alt="arrow" width="15" height="15" class="arrow" >
+    </h2>
         </div>
 
         
@@ -364,12 +518,23 @@ import image1 from '../assets/imagecart.png';
 export default {
   data() {
     return {
+      isCategoryOpen: false,
+      isPowerSportOpen: false,
+
       selectedGenders: [], // ['male', 'female']
       search: '',
       filterType: 'all',
       isAgeDropdownOpen: false, // Открыт ли dropdown
       selectedAge: 0, // Выбранный возраст (0 = Любой)
-      ages: Array.from({ length: 19 }, (_, i) => i), // [0, 1, 2, ..., 18]
+      ages: Array.from({ length: 19 }, (_, i) => i), // [0, 1, 2, ..., 18]subcategories
+      subcategories: [
+        {tag: 'Тяжелая атлетика'},
+        {tag: 'Пауэрлифтинг'},
+      ],
+      martialArtsSubcategories: [
+      { tag: 'Дзюдо' },
+      { tag: 'Вольная борьба' },
+      ],
       cards: [
         // Силовой спорт
         {
@@ -386,6 +551,8 @@ export default {
           location: 'ФОК "Юбилейный"',
           days: 'Пн, Ср, Пт',
           times: ['09:00 - 10:30', '12:00 - 13:30', '18:00 - 19:30'],
+          gender: 'male',
+
         },
         {
           id: 2,
@@ -401,6 +568,8 @@ export default {
           location: 'ФОК "Юбилейный"',
           days: 'Пн, Ср, Пт',
           times: ['09:00 - 10:30', '12:00 - 13:30'],
+          gender: 'female',
+
         },
         {
           id: 3,
@@ -416,6 +585,8 @@ export default {
           location: 'ФОК "Юбилейный"',
           days: 'Пн, Ср, Пт',
           times: ['09:00 - 10:30', '12:00 - 13:30', '18:00 - 19:30'],
+          gender: 'male',
+
         },
         {
           id: 4,
@@ -431,6 +602,8 @@ export default {
           location: 'ФОК "Юбилейный"',
           days: 'Пн, Ср, Пт',
           times: ['09:00 - 10:30', '12:00 - 13:30', '18:00 - 19:30'],
+          gender: 'female',
+
         },
         // Единоборства, секция 1
         {
@@ -448,6 +621,8 @@ export default {
           location: 'СК "Вымпел"',
           days: 'Пн, Ср, Пт',
           times: ['09:00 - 10:30', '12:00 - 13:30', '18:00 - 19:30'],
+          gender: 'both',
+
         },
         {
           id: 6,
@@ -567,6 +742,16 @@ export default {
           return this.selectedAge >= minAge && this.selectedAge <= maxAge;
         })
       }
+      // Если длина массива больше (то есть там что-то добавлено),
+      //  то обращаемся к переменной filtered и фильтруем карточку,
+      //  обращаясь к нашему массиву и проверяем,
+      //  есть ли там gender(пол), или есть ли там оба "both
+      // карточки с gender: 'both' показываются всегда, если есть выбранный пол.
+      if(this.selectedGenders.length > 0) {
+        filtered = filtered.filter(card => 
+          this.selectedGenders.includes(card.gender) || card.gender === 'both'
+        );
+      }
       // Возвращаем все карточки, если фильтр не выбран
       return filtered;
     },
@@ -588,6 +773,7 @@ export default {
     filteredMartialArtsCardsSection3() {
       return this.filteredCards.filter(c => c.category === 'Единоборства' && c.section === 3);
     },
+  
   },
 
   methods: {
@@ -605,6 +791,25 @@ export default {
         this.isAgeDropdownOpen = false;
       }
     },
+// из закрытого ( первоначальное состояние) делаем открытым 
+    toggleCategory() {
+      this.isCategoryOpen = !this.isCategoryOpen;
+    },
+    toggleCategory1() {
+      this.isPowerSportOpen = !this.isPowerSportOpen;
+    },
+    // считаем длину 
+      getCount(tag) {
+      return this.cards.filter(card => card.tag === tag).length
+    },
+          getCountOur(tag) {
+      return this.cards.filter(card => card.tag === tag).length
+    },
+    // Считает количество карточек для указанной категории
+getCategoryCount(category) {
+  // Считает количество карточек для указанной категории
+  return this.cards.filter(card => card.category === category).length;
+},
     // mounted() {
     //   document.addEventListener('click', this.closeDropdown);
     // },
@@ -686,6 +891,7 @@ export default {
   font-family: 'Montserrat', sans-serif;
   font-size: 14px;
   cursor: pointer;
+  
 }
 
 /* допилить, чтоб не накладывалось друг на друга */
@@ -742,4 +948,38 @@ export default {
 }
 
 
+.arrow {
+  transition: transform 0.3s ease;
+}
+.rotated {
+  transform: rotate(180deg);
+}
+.category-list {
+  margin-top: 10px;
+  padding-left: 10px;
+}
+.subcategory-item {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+.accordion-enter-active, .accordion-leave-active {
+  transition: opacity 0.3s ease, max-height 0.3s ease;
+  overflow: hidden;
+  max-height: 100px;
+}
+.accordion-enter, .accordion-leave-to {
+  opacity: 0;
+  max-height: 0;
+}
+
+.count{
+  color: #70232F;
+}
+
+.category-title {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Отступ между текстом и цифрой */
+}
 </style>
