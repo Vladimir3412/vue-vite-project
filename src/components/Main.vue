@@ -394,7 +394,14 @@
     
     @click="toggleSubcategory(subcatecor.tag)" :class="{'selected' : selectedSubcategories.includes(subcatecor.tag)}"
     >
-    <!-- Клик добавляет/убирает подкатегорию из selectedSubcategories, подсвечивает выбранную ВЫШЕ -->
+    <!--       // Ты кликаешь на "Дзюдо":
+// @click="toggleSubcategory('Дзюдо')" -->
+
+    <!-- Клик добавляет/убирает подкатегорию из selectedSubcategories, подсвечивает выбранную ВЫШЕ 
+    subcatecor.tag — текущий тег из цикла v-for (например, 'Дзюдо') 
+    в функцию toggleSubcategory передает наш тег из v-for, т.е есть массива, где есть наши теги в martialArtsSubcategories
+    Говорить передать нужное значение, а именно из массива subcatecor - тэг
+    -->
       <li class="cursor-pointer"> {{ subcatecor.tag }} 
         <span class="count">
           {{ getCount(subcatecor.tag) }}
@@ -524,11 +531,13 @@ import image1 from '../assets/imagecart.png';
 export default {
   data() {
     return {
+      // загружаем выбранные подкатегории из localStorage или юзаем пустой массив
+      selectedSubcategories: JSON.parse(localStorage.getItem('selectedSubcategories')) || [],
       isCategoryOpen: false,
       isPowerSportOpen: false,
 
-      selectedGenders: [], // ['male', 'female']
-      selectedSubcategories: [], // Хранит выбранные подкатегории (например, ['Тяжелая атлетика'])
+      selectedGenders: JSON.parse(localStorage.getItem('selectedGenders')) || [], // ['male', 'female']
+      
       search: '',
       filterType: 'all',
       isAgeDropdownOpen: false, // Открыт ли dropdown
@@ -759,11 +768,15 @@ export default {
         filtered = filtered.filter(card => 
           this.selectedGenders.includes(card.gender) || card.gender === 'both'
         );
+       localStorage.setItem('selectedGenders', JSON.stringify(this.selectedGenders));
+
+
       }
 
 // Фильтруем карточки по подкатегориям, если selectedSubcategories не пустой
 // Сначала смотрим, выбраны ли подкатегории, если да, то
 // осталяем только те карточки, где card.tag есть в selectedSubcategories
+// filteredCards фильтрует карточки, оставляя только card.tag = 'Дзюдо'
       if(this.selectedSubcategories.length > 0) {
         filtered = filtered.filter(card => this.selectedSubcategories.includes(card.tag))
       }
@@ -841,12 +854,18 @@ getCategoryCount(category) {
     },
     toggleSubcategory(tag) {
       // Если тег уже выбран, убираем его
+      // Начальное состояние: selectedSubcategories = [].
+      // Ты кликаешь на "Дзюдо":
+// @click="toggleSubcategory('Дзюдо')" → toggleSubcategory('Дзюдо').
+// includes('Дзюдо') = false → push('Дзюдо') → selectedSubcategories = ['Дзюдо'].
       if(this.selectedSubcategories.includes(tag)) {
         this.selectedSubcategories = this.selectedSubcategories.filter(t => t !== tag)
         // Если тег не выбран, добавляем его
       } else {
         this.selectedSubcategories.push(tag);
       }
+      // Сохраняем обновлённый массив в localStorage для сохранения при перезагрузке
+      localStorage.setItem('selectedSubcategories', JSON.stringify(this.selectedSubcategories));
     }
 
   }
