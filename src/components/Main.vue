@@ -333,7 +333,7 @@
       <div class="checkbox-group">
         <label class="checkbox-label ">
           <!-- v-model привязывает чекбокс к массиву selectedGenders и значение value="male" закинется в массив selectedGenders-->
-          <input type="checkbox" v-model="selectedGenders" value="male" class="hidden-checkbox ">
+          <input type="checkbox" v-model="selectedGenders" value="male" class="hidden-checkbox " >
           <!-- Мы добавим класс при условии, что в массиве есть значеение 'male', если true - добавляем, иначе - false -->
           <span class="custom-checkbox" :class="{ 'checked': selectedGenders.includes('male') }">
             <!-- если в массиве есть 'male', то показываем галочку -->
@@ -532,10 +532,10 @@ export default {
   data() {
     return {
       // загружаем выбранные подкатегории из localStorage или юзаем пустой массив
-      selectedSubcategories: JSON.parse(localStorage.getItem('selectedSubcategories')) || [],
+      
       isCategoryOpen: JSON.parse(localStorage.getItem('isCategoryOpen')) || false,
       isPowerSportOpen: JSON.parse(localStorage.getItem('isPowerSportOpen')) || false,
-
+      selectedSubcategories: JSON.parse(localStorage.getItem('selectedSubcategories')) || [],
       selectedGenders: JSON.parse(localStorage.getItem('selectedGenders')) || [], // ['male', 'female']
       
       search: '',
@@ -823,12 +823,15 @@ export default {
     },
 // из закрытого ( первоначальное состояние) делаем открытым 
     toggleCategory() {
+      // Переключает состояние аккордеона Силовой спорт (открыт/закрыт)
       this.isCategoryOpen = !this.isCategoryOpen;
       // Сохраняем состояние в localStorage для сохранения при перезагрузке
       localStorage.setItem('isCategoryOpen', JSON.stringify(this.isCategoryOpen))
     },
     toggleCategory1() {
+      // Переключает состояние аккордеона Единоборства (открыт/закрыт)
       this.isPowerSportOpen = !this.isPowerSportOpen;
+      // Сохраняем состояние в localStorage для сохранения при перезагрузке
       localStorage.setItem('isPowerSportOpen', JSON.stringify(this.isPowerSportOpen))
 
     },
@@ -879,18 +882,35 @@ getCategoryCount(category) {
       }
       // Сохраняем обновлённый массив в localStorage для сохранения при перезагрузке
       localStorage.setItem('selectedSubcategories', JSON.stringify(this.selectedSubcategories));
-    }
+    },
+
 
   },
   created() {
     // Открываем открвающийся список(аккордеон) Силовой спорт, если есть выбранные подкатегории
+
+    // Проверяем, есть ли выбранные подкатегории, и открываем соответствующие аккордеоны
+    // Для Силового спорта: если в selectedSubcategories есть тег из subcategories
     if(this.selectedSubcategories.some(tag => this.subcategories.map(s => s.tag).includes(tag))) {
+      // Открываем аккордеон Силовой спорт
       this.isCategoryOpen = true;
+      // Сохраняем состояние в localStorage
       localStorage.setItem('isCategoryOpen', JSON.stringify(true));
     }
+    // Для Единоборств: если в selectedSubcategories есть тег из martialArtsSubcategories
     if(this.selectedSubcategories.some(tag => this.martialArtsSubcategories.map(s => s.tag).includes(tag))) {
+      // Открываем аккордеон Единоборства
       this.isPowerSportOpen = true;
+      // Сохраняем состояние в localStorage
       localStorage.setItem('isPowerSportOpen', JSON.stringify(true));
+    }
+  },
+  watch: {
+    selectedGenders: {
+      handler(newValue) {
+        localStorage.setItem('selectedGenders', JSON.stringify(newValue))
+      },
+      deep: true,
     }
   }
 
@@ -1031,6 +1051,7 @@ getCategoryCount(category) {
   font-family: 'Montserrat', sans-serif;
   font-size: 14px;
   margin-bottom: 5px;
+  cursor: pointer;
 }
 .accordion-enter-active, .accordion-leave-active {
   transition: opacity 0.3s ease, max-height 0.3s ease;
