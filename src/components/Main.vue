@@ -305,7 +305,7 @@
       <div class="w-[330px]"  >
         <h1 class="font-semibold text-[24px] font-montserrat mb-[17px]">Фильтры</h1>
           
-        <div class="h-[1215px] bg-white rounded-[5px] rounded-t-[15px] px-[20px] py-[10px] gap-[15px] flex flex-col">
+        <div class=" bg-white rounded-[5px] rounded-t-[15px] px-[20px] py-[10px] gap-[15px] flex flex-col">
           <h1 class="font-semibold text-[14px]">Возраст</h1>
 
           <div class="relative">
@@ -870,6 +870,7 @@ getCategoryCount(category) {
         // Если тег не выбран, добавляем его
       } else {
         this.selectedSubcategories.push(tag);
+        // Проверяет, относится ли выбранный тег (например, 'Тяжелая атлетика') к категории "Силовой спорт". Если да, открывает список "Силовой спорт" и сохраняет это в localStorage.
         if(this.subcategories.map(s => s.tag).includes(tag)) {
           this.isCategoryOpen = true;
           localStorage.setItem('isCategoryOpen', JSON.stringify(true))
