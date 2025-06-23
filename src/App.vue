@@ -1,13 +1,21 @@
 <script setup>
 import Header from './components/Header.vue'
 import Main from './components/Main.vue'
+import Cardinfo from './components/Cardinfo.vue';
 </script>
 
 <template>
-<div>
+
+  <router-view />
+<!-- <div>
   <Header />
   <Main/>
+  <Cardinfo />
 
-</div>
+</div> -->
 </template>
-
+<script>
+export default {
+  name: 'App',
+};
+</script>

@@ -1,5 +1,6 @@
 
 <template>
+  <Header />
   <div class="w-[1480px] min-h-[2916px] bg-[#EFEFEF] mx-auto mt-6 rounded-[15px] p-[40px] mt-[30px] mb-[30px]">
     <!-- Панель поиска и фильтров -->
     <div class="flex items-center justify-between gap-[20px] flex-wrap">
@@ -101,6 +102,7 @@
             </div>
             <button
               class="absolute bottom-[20px] right-[20px] text-[14px] text-white px-[20px] py-[10px] rounded-[5px] bg-[#70232F]"
+              @click="goToDetails(card.id)"
             >
               Подробнее
             </button>
@@ -165,6 +167,7 @@
             </div>
             <button
               class="absolute bottom-[20px] right-[20px] text-[14px] text-white px-[20px] py-[10px] rounded-[5px] bg-[#70232F]"
+              @click="goToDetails(card.id)"
             >
               Подробнее
             </button>
@@ -229,8 +232,10 @@
             </div>
             <button
               class="absolute bottom-[20px] right-[20px] text-[14px] text-white px-[20px] py-[10px] rounded-[5px] bg-[#70232F]"
+              @click="goToDetails(card.id)"
             >
               Подробнее
+              
             </button>
           </div>
           </transition-group>
@@ -293,6 +298,7 @@
             </div>
             <button
               class="absolute bottom-[20px] right-[20px] text-[14px] text-white px-[20px] py-[10px] rounded-[5px] bg-[#70232F]"
+               @click="goToDetails(card.id)"
             >
               Подробнее
             </button>
@@ -527,8 +533,12 @@ import chevstrelka from '../assets/strelka.png'
 </script>
 <script>
 import image1 from '../assets/imagecart.png';
+import Header from '../components/Header.vue'
+
 
 export default {
+  name: 'Main',
+  components: { Header },
   data() {
     return {
       // загружаем выбранные подкатегории из localStorage или юзаем пустой массив
@@ -559,7 +569,7 @@ export default {
           category: 'Силовой спорт',
           title: 'Тяжелая атлетика',
           subtitle: '(в Юбилейном мкр.)',
-          age: '10-18 лет',
+          age: '10-18 лет (муж.)',
           tag: 'Тяжелая атлетика',
           type: 'Бесплатно',
           firstFree: false,
@@ -576,7 +586,7 @@ export default {
           category: 'Силовой спорт',
           title: 'Тяжелая атлетика',
           subtitle: '(на ул. Боткина)',
-          age: '10-18 лет',
+          age: '10-18 лет (жен.)',
           tag: 'Тяжелая атлетика',
           type: '500 руб.',
           firstFree: true,
@@ -593,7 +603,7 @@ export default {
           category: 'Силовой спорт',
           title: 'Тяжелая атлетика',
           subtitle: '(на ул. Норильской)',
-          age: '10-18 лет',
+          age: '10-18 лет (муж.)',
           tag: 'Тяжелая атлетика',
           type: '3200 руб. 8 занятий',
           firstFree: true,
@@ -610,7 +620,7 @@ export default {
           category: 'Силовой спорт',
           title: 'Пауэрлифтинг',
           subtitle: '',
-          age: '10-18 лет',
+          age: '10-18 лет (жен.)',
           tag: 'Пауэрлифтинг',
           type: 'Бесплатно',
           firstFree: false,
@@ -629,7 +639,7 @@ export default {
           section: 1,
           title: 'Дзюдо',
           subtitle: '',
-          age: '6-18 лет',
+          age: '6-18 лет (муж.)',
           tag: 'Дзюдо',
           type: 'Бесплатно',
           firstFree: false,
@@ -638,16 +648,16 @@ export default {
           location: 'СК "Вымпел"',
           days: 'Пн, Ср, Пт',
           times: ['09:00 - 10:30', '12:00 - 13:30', '18:00 - 19:30'],
-          gender: 'both',
+          gender: 'male',
 
         },
         {
           id: 6,
           category: 'Единоборства',
           section: 1,
-          title: 'Вольная борьба',
+          title: 'Вольная борьба ',
           subtitle: '(на ул. Норильская)',
-          age: '6-18 лет',
+          age: '6-18 лет (жен.)',
           tag: 'Вольная борьба',
           type: '3200 руб. месяц',
           firstFree: true,
@@ -656,6 +666,8 @@ export default {
           location: 'ФОК "Юбилейный"',
           days: 'Пн, Ср, Пт',
           times: ['09:00 - 10:30', '12:00 - 13:30', '18:00 - 19:30'],
+          gender: 'female',
+          
         },
         // Единоборства, секция 2
         {
@@ -664,7 +676,7 @@ export default {
           section: 2,
           title: 'Дзюдо',
           subtitle: '',
-          age: '6-18 лет',
+          age: '6-18 лет (муж.)',
           tag: 'Дзюдо',
           type: 'Бесплатно',
           firstFree: false,
@@ -673,6 +685,7 @@ export default {
           location: 'СК "Вымпел"',
           days: 'Пн, Ср, Пт',
           times: ['09:00 - 10:30', '12:00 - 13:30', '18:00 - 19:30'],
+          gender: 'male',
         },
         {
           id: 8,
@@ -680,7 +693,7 @@ export default {
           section: 2,
           title: 'Вольная борьба',
           subtitle: '(на ул. Норильская)',
-          age: '6-18 лет',
+          age: '6-18 лет (муж.)',
           tag: 'Вольная борьба',
           type: '3200 руб. месяц',
           firstFree: false,
@@ -689,6 +702,7 @@ export default {
           location: 'ФОК "Юбилейный"',
           days: 'Пн, Ср, Пт',
           times: ['09:00 - 10:30', '12:00 - 13:30', '18:00 - 19:30'],
+          gender: 'male',
         },
         // Единоборства, секция 3
         {
@@ -697,7 +711,7 @@ export default {
           section: 3,
           title: 'Дзюдо',
           subtitle: '',
-          age: '6-18 лет',
+          age: '6-18 лет (муж.)',
           tag: 'Дзюдо',
           type: 'Бесплатно',
           firstFree: false,
@@ -706,6 +720,7 @@ export default {
           location: 'СК "Вымпел"',
           days: 'Пн, Ср, Пт',
           times: ['09:00 - 10:30', '12:00 - 13:30', '18:00 - 19:30'],
+          gender: 'male',
         },
         {
           id: 10,
@@ -713,7 +728,7 @@ export default {
           section: 3,
           title: 'Вольная борьба',
           subtitle: '(на ул. Норильская)',
-          age: '6-18 лет',
+          age: '6-18 лет (жен.)',
           tag: 'Вольная борьба',
           type: '3200 руб. 8 занятий',
           firstFree: true,
@@ -722,6 +737,7 @@ export default {
           location: 'ФОК "Юбилейный"',
           days: 'Пн, Ср, Пт',
           times: ['09:00 - 10:30', '12:00 - 13:30', '18:00 - 19:30'],
+          gender: 'female',
         },
       ],
     };
@@ -883,6 +899,10 @@ getCategoryCount(category) {
       }
       // Сохраняем обновлённый массив в localStorage для сохранения при перезагрузке
       localStorage.setItem('selectedSubcategories', JSON.stringify(this.selectedSubcategories));
+    },
+
+goToDetails(id) {
+      this.$router.push(`/details/${id}`);
     },
 
 
