@@ -902,8 +902,9 @@ getCategoryCount(category) {
     },
 
 goToDetails(id) {
-      this.$router.push(`/details/${id}`);
-    },
+  console.log('Переход на карточку с ID:', id);
+    this.$router.push(`/details/${id}`);
+  },
 
 
   },
